@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Route, Link, Switch } from "react-router-dom";
 import axios from 'axios';
 
+import MovieList from './Movies/MovieList';
 import SavedList from './Movies/SavedList';
 
 export default function App () {
@@ -12,6 +14,8 @@ export default function App () {
       axios
         .get('http://localhost:5000/api/movies') // Study this endpoint with Postman
         .then(response => {
+          console.log(response, 'response')
+          setMovieList(response.data);
           // Study this response with a breakpoint or log statements
           // and set the response data as the 'movieList' slice of state
         })
@@ -22,15 +26,23 @@ export default function App () {
     getMovies();
   }, []);
 
+
   const addToSavedList = id => {
     // This is stretch. Prevent the same movie from being "saved" more than once
   };
 
   return (
-    <div>
-      <SavedList list={[ /* This is stretch */]} />
+    <Router>
+      <div>
+        <SavedList list={[ /* This is stretch */]} />
 
-      <div>Replace this Div with your Routes</div>
-    </div>
+        <Route path='/'>
+          <MovieList movies={movieList}/>
+        </Route>
+        
+        <Route path='/movielist/:id' />
+      </div>
+    </Router>
+    
   );
 }
